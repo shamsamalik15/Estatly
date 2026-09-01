@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Estatly — Find, Tour & Manage Premium Properties</title>
+<meta name="description" content="Search premium apartments, villas and commercial spaces, schedule tours instantly, and manage qualified leads from one agent dashboard." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<header class="header">
+  <div class="container header-inner">
+    <a class="brand" href="#"><span class="brand-mark">◆</span> Estatly</a>
+    <nav class="nav">
+      <a href="#listings">Buy</a>
+      <a href="#listings">Rent</a>
+      <a href="#listings">Commercial</a>
+      <a href="#dashboard-section">Agents</a>
+    </nav>
+    <div class="header-actions">
+      <label class="view-toggle">
+        <span>Agent Dashboard</span>
+        <span class="switch">
+          <input type="checkbox" id="viewToggle" />
+          <span class="slider"></span>
+        </span>
+      </label>
+      <button class="btn btn-primary" id="headerCta">List Property</button>
+    </div>
+  </div>
+</header>
+
+<!-- ========== BUYER VIEW ========== -->
+<main id="buyerView">
+  <section class="hero">
+    <div class="container">
+      <span class="hero-badge">● 1,284 verified listings updated today</span>
+      <h1>Find the home that <em>fits your life</em>, not just your budget.</h1>
+      <p>Filter thousands of curated apartments, villas and commercial spaces, then book a private tour in under 30 seconds.</p>
+      <div class="hero-stats">
+        <div><strong>12k+</strong><span>Tours booked</span></div>
+        <div><strong>98%</strong><span>Client satisfaction</span></div>
+        <div><strong>24h</strong><span>Avg. agent response</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search filter bar -->
+  <div class="container search-wrap">
+    <form class="search-card" id="searchForm">
+      <div class="field">
+        <label for="fLocation">Location</label>
+        <input type="text" id="fLocation" placeholder="City or neighborhood" />
+      </div>
+      <div class="field">
+        <label for="fType">Property type</label>
+        <select id="fType">
+          <option value="">Any type</option>
+          <option>Apartment</option>
+          <option>Villa</option>
+          <option>Commercial</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Price range (USD)</label>
+        <div class="price-row">
+          <input type="number" id="fMin" placeholder="Min" min="0" />
+          <input type="number" id="fMax" placeholder="Max" min="0" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="fBeds">Bedrooms</label>
+        <select id="fBeds">
+          <option value="">Any</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+          <option value="4">4+</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="fSort">Sort by</label>
+        <select id="fSort">
+          <option value="featured">Featured</option>
+          <option value="low">Price: low to high</option>
+          <option value="high">Price: high to low</option>
+          <option value="size">Largest area</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+  </div>
+
+  <!-- Listings -->
+  <section class="section" id="listings">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Recommended for you</h2>
+          <p>Handpicked based on your saved searches and viewing history.</p>
+        </div>
+        <div class="result-count" id="resultCount">Showing 0 properties</div>
+      </div>
+      <div class="grid" id="propertyGrid"></div>
+      <div class="empty hidden" id="emptyState">
+        <strong>No properties match those filters</strong>
+        Try widening your price range or clearing the location field.
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========== AGENT DASHBOARD VIEW ========== -->
+<main id="dashboardView" class="hidden">
+  <section class="section" id="dashboard-section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Agent dashboard</h2>
+          <p>Live pipeline health, booked tours and today's follow-ups.</p>
+        </div>
+        <button class="btn btn-ghost" id="backToListings">← Back to listings</button>
+      </div>
+
+      <div class="stat-grid" id="statGrid"></div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Lead pipeline</h3>
+            <small id="leadMeta"></small>
+          </div>
+          <table>
+            <thead>
+              <tr><th>Lead</th><th>Interest</th><th>Budget</th><th>Status</th></tr>
+            </thead>
+            <tbody id="leadRows"></tbody>
+          </table>
+        </div>
+
+        <div style="display:grid;gap:22px">
+          <div class="panel">
+            <div class="panel-head"><h3>Booked tours</h3><small id="tourMeta"></small></div>
+            <div id="tourList"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>Follow-up reminders</h3></div>
+            <div id="reminderList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <span>© 2026 Estatly Property Group. All rights reserved.</span>
+    <span>hello@estatly.com · +1 (415) 555-0188</span>
+  </div>
+</footer>
+
+<!-- Mount points for dynamic UI -->
+<div class="toast-stack" id="toastStack"></div>
+<div id="modalRoot"></div>
+
+<script type="module">
+    import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+    Chatbot.init({
+        chatflowid: "c052acd3-ada7-452c-9d2b-3f9c1cc9d965",
+        apiHost: "https://cloud.flowiseai.com",
+        chatflowConfig: {
+            /* Chatflow Config */
+        },
+        observersConfig: {
+            /* Observers Config */
+        },
+        theme: {
+            button: {
+                backgroundColor: '#3B81F6',
+                right: 20,
+                bottom: 20,
+                size: 48,
+                dragAndDrop: true,
+                iconColor: 'white',
+                customIconSrc: 'https://icons8.com/icons/set/real-estate',
+                autoWindowOpen: {
+                    autoOpen: true,
+                    openDelay: 2,
+                    autoOpenOnMobile: false
+                }
+            },
+            tooltip: {
+                showTooltip: true,
+                tooltipMessage: 'Need help finding a home?',
+                tooltipBackgroundColor: 'black',
+                tooltipTextColor: 'white',
+                tooltipFontSize: 16
+            },
+            disclaimer: {
+                title: 'Disclaimer',
+                message: "By using this chatbot, you agree to the <a target=\"_blank\" href=\"https://flowiseai.com/terms\">Terms & Condition</a>",
+                textColor: 'black',
+                buttonColor: '#3b82f6',
+                buttonText: 'Start Chatting',
+                buttonTextColor: 'white',
+                blurredBackgroundColor: 'rgba(0, 0, 0, 0.4)',
+                backgroundColor: 'white'
+            },
+            customCSS: ``,
+            chatWindow: {
+                showTitle: true,
+                showAgentMessages: true,
+                title: 'Estatly Assistant',
+                titleAvatarSrc: 'https://img.icons8.com/fluent-systems-regular/1200/real-estate.jpg',
+                welcomeMessage: 'Hello! I’m your Estatly property assistant. I can help you find homes, compare options, and book a tour.',
+                errorMessage: 'Sorry, I could not answer that right now. Please try again or contact an Estatly agent.',
+                backgroundColor: '#ffffff',
+                backgroundImage: 'enter image path or link',
+                height: 700,
+                width: 400,
+                fontSize: 16,
+                starterPrompts: [
+                    "Ask Estatly Assistant to find homes for you.",
+                    "can you help me find a home?"
+                ],
+                starterPromptFontSize: 15,
+                clearChatOnReload: false,
+                sourceDocsTitle: 'Sources:',
+                renderHTML: true,
+                botMessage: {
+                    backgroundColor: '#f7f8ff',
+                    textColor: '#303235',
+                    showAvatar: true,
+                    avatarSrc: 'https://img.icons8.com/fluent-systems-regular/1200/real-estate.jpg'
+                },
+                userMessage: {
+                    backgroundColor: '#3B81F6',
+                    textColor: '#ffffff',
+                    showAvatar: true,
+                    avatarSrc: 'https://img.icons8.com/fluent-systems-regular/1200/real-estate.jpg'
+                },
+                textInput: {
+                    placeholder: 'Type your question',
+                    backgroundColor: '#ffffff',
+                    textColor: '#303235',
+                    sendButtonColor: '#3B81F6',
+                    maxChars: 50,
+                    maxCharsWarningMessage: 'You exceeded the characters limit. Please input less than 50 characters.',
+                    autoFocus: true,
+                    sendMessageSound: true,
+                    sendSoundLocation: 'send_message.mp3',
+                    receiveMessageSound: true,
+                    receiveSoundLocation: 'receive_message.mp3'
+                },
+                feedback: {
+                    color: '#303235'
+                },
+                dateTimeToggle: {
+                    date: true,
+                    time: true
+                },
+                footer: {
+                    textColor: '#303235',
+                    text: 'Powered by',
+                    company: 'Estatly',
+                    companyLink: 'https://flowiseai.com'
+                }
+            }
+        }
+    })
+</script>
+
+<script src="script.js"></script>
+</body>
+</html>
